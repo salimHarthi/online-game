@@ -25,14 +25,14 @@ app.use(express.static(path.join(__dirname, "static")));
   const io = require('socket.io')(server);
   io.on("connection", (socket) => {
     console.log("connect")
-    io.emit('chat message', "test");
-    socket.on("storeClientInfo", function (data) {
-      data.Interest = data.Interest.split(",");
-      for (let item of data.Interest) {
-        socket.join(item);
-      }
+
+    socket.on("move", (data) => {
+      socket.broadcast.emit("move",data)
+      //io.emit('move', data);
     });
-  });
+
+})
+
   app.use(function (req, res, next) {
     req.io = io;
     next();
@@ -42,7 +42,4 @@ app.use(express.static(path.join(__dirname, "static")));
     res.sendFile(__dirname + '/static/index.html');
    });
    
-   app.get('/test', (req, res) => {
-    io.emit('chat message', "test");
-    res.send("done")
-   });
+ 

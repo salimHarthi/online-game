@@ -2,12 +2,9 @@
 $( document ).ready(function() {
   const socket = io('http://localhost:3000/');
 
-  $(function () {
-      socket.on('chat message', function(msg){
-        $('#test').text(msg);
-      });
 
-  });
+
+
 // setup 
   let canvas = $("#myCanvas");
   let ctx = canvas.get(0).getContext("2d");
@@ -67,16 +64,28 @@ const d = 100
     postionX.new = postionX.new>widthMax?widthMax:postionX.new
     postionY.new = postionY.new>hightMax?hightMax:postionY.new
     
-    console.log(postionX.new,postionY.new)
     ctx.clearRect(postionX.old, postionY.old, PIXELSIZE, PIXELSIZE);
     ctx.fillRect(postionX.new, postionY.new, PIXELSIZE, PIXELSIZE);
+    socket.emit('move', [postionX,postionY])
   }
   $(document).on('keypress',function(e) {
-    //console.log(e)
     move(e)
-    if(e.which == 13) {
-        alert('You pressed enter!');
-    }
+    
   });
+
+  $(function () {
+    socket.on('move', function(move){
+      ctx.clearRect(move[0].old, move[1].old, PIXELSIZE, PIXELSIZE);
+      ctx.fillRect(move[0].new, move[1].new, PIXELSIZE, PIXELSIZE);
+      crash(move)
+    });
+
+  })
+
+const crash = (other) =>{
+  if ( other[0].new == postionX.new && other[1].new == postionY.new){
+    alert("crashed");
+  }
+} 
 });
 
