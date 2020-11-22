@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const socket = io("http://localhost:3000/");
+  const socket = io();
   const url = window.location.pathname;
   const roomId = url.substring(url.lastIndexOf("/") + 1);
   // connection setup
