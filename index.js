@@ -2,8 +2,11 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const cors = require("cors");
+const Room = require("./game/room");
 const port = process.env.PORT || 3000;
 app.use(cors());
+
+//Room.validateToken(Room.createRoomToken("a"),"a")
 
 app.use(express.static(path.join(__dirname, "static")));
 
@@ -12,11 +15,25 @@ const server = app.listen(port, function (error) {
     console.log.error("Unable to listen for connections", error);
     process.exit(10);
   }
-  console.log("express is listening on http://" +  ":" + port);
+  console.log("express is listening on http://" + ":" + port);
 });
 const io = require("socket.io")(server);
 io.on("connection", (socket) => {
   console.log("connect");
+
+  socket.on("checkRoom", (room) => {
+    console.log(room);
+    if (!Room.roomExist(io.sockets.adapter.rooms.get(room))) {
+      return socket.emit("checkRoom", "room does not exist");
+    }
+    roomSize = io.sockets.adapter.rooms.get(room).size;
+    if (!Room.roomLimit(roomSize, room)) {
+      socket.emit("checkRoom", "room is full");
+    } else {
+      socket.emit("RoomAvailable", "Room available");
+    }
+  });
+
   socket.on("room", (room) => {
     socket.join(room);
     console.log(io.sockets.adapter.rooms.get(room).size);
