@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
   console.log("connect");
   socket.on("room", (room) => {
     socket.join(room);
-    console.log(io.sockets.adapter.rooms.get("q").size);
+    console.log(io.sockets.adapter.rooms.get(room).size);
   });
 
   socket.on("move", (data) => {

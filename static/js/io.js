@@ -10,16 +10,23 @@ $(document).ready(function () {
 
   class Otherplayer {
     move(data) {
+      ctx.fillStyle = "red";
       ctx.clearRect(data.postionX.old, data.postionY.old, PIXELSIZE, PIXELSIZE);
       ctx.fillRect(data.postionX.new, data.postionY.new, PIXELSIZE, PIXELSIZE);
     }
   }
   class Player {
     constructor(name) {
-      //this.color = color;
+      this.myStartPoint = this.startPoint();
       this.name = name;
     }
+    startPoint(){
+      let magicW = widthMax/PIXELSIZE
+      let magicH = hightMax/PIXELSIZE
+      return [Math.floor(Math.random() * magicW)*PIXELSIZE, Math.floor(Math.random() * magicH)*PIXELSIZE]
+    }
     move(key) {
+      ctx.fillStyle = "blue";
       postionX.old = postionX.new;
       postionY.old = postionY.new;
       switch (key.charCode) {
@@ -54,23 +61,21 @@ $(document).ready(function () {
   }
 
   // setup
-  let myplayer = new Player("salim");
-  let player2 = new Otherplayer();
   let canvas = $("#myCanvas");
   let ctx = canvas.get(0).getContext("2d");
   let canvasWidth = canvas.width();
   let canvasHeight = canvas.height();
   let DIMENSION = 25;
   let PIXELSIZE = canvasWidth / DIMENSION;
-  let selectedColor = "#222244";
-  let enabled = true;
-  let filledPixels = {};
-  let postionX = { old: 0, new: 0 };
-  let postionY = { old: 0, new: 0 };
   let widthMax = canvasWidth - PIXELSIZE;
   let hightMax = canvasHeight - PIXELSIZE;
-  ctx.strokeStyle = "rgba(0,0,0,0.1)";
+  let myplayer = new Player("salim");
+  let player2 = new Otherplayer();
+  let postionX = { old: myplayer.myStartPoint[0], new: myplayer.myStartPoint[0] };
+  let postionY = { old: myplayer.myStartPoint[1], new: myplayer.myStartPoint[1]};
+  ctx.fillStyle = "blue";
   for (let i = 0; i < DIMENSION; ++i) {
+    ctx.strokeStyle = "rgba(0,0,0,0.1)";
     x = Math.floor((i * canvasWidth) / DIMENSION);
     ctx.beginPath();
     ctx.moveTo(x, 0);
@@ -97,7 +102,6 @@ $(document).ready(function () {
 
   $(function () {
     socket.on("move", function (move) {
-      console.log(move.postionX.new);
       player2.move(move);
       crash(move);
     });
