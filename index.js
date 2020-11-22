@@ -3,17 +3,16 @@ const path = require("path");
 const app = express();
 const cors = require("cors");
 const port = process.env.PORT || 3000;
-const ip = "localhost";
 app.use(cors());
 
 app.use(express.static(path.join(__dirname, "static")));
 
-const server = app.listen(port, ip, function (error) {
+const server = app.listen(port, function (error) {
   if (error) {
     console.log.error("Unable to listen for connections", error);
     process.exit(10);
   }
-  console.log("express is listening on http://" + ip + ":" + port);
+  console.log("express is listening on http://" +  ":" + port);
 });
 const io = require("socket.io")(server);
 io.on("connection", (socket) => {

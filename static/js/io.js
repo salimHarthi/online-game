@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  const socket = io("https://salim-game.herokuapp.com/");
+  const socket = io();
   const url = window.location.pathname;
   const roomId = url.substring(url.lastIndexOf("/") + 1);
   // connection setup
