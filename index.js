@@ -18,12 +18,17 @@ const server = app.listen(port, ip, function (error) {
 const io = require("socket.io")(server);
 io.on("connection", (socket) => {
   console.log("connect");
+  socket.on("room", (room) => {
+    socket.join(room);
+    console.log(io.sockets.adapter.rooms.get("q").size);
+  });
 
   socket.on("move", (data) => {
-    socket.broadcast.emit("move", data);
+    socket.to(data.id).broadcast.emit("move", data);
   });
   socket.on("crash", (data) => {
-    io.emit("crash", data);
+    io.to(data.id).emit("crash", data);
+    //io.emit("crash", data);
   });
 });
 
@@ -32,6 +37,9 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.get("/game/:id", (req, res) => {
+  res.sendFile(__dirname + "/static/game.html");
+});
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/static/index.html");
 });

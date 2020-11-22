@@ -1,10 +1,17 @@
 $(document).ready(function () {
   const socket = io("http://localhost:3000/");
+  const url = window.location.pathname;
+  const roomId = url.substring(url.lastIndexOf("/") + 1);
+  // connection setup
+  socket.on("connect", () => {
+    // either with send()
+    socket.emit("room", roomId);
+  });
 
   class Otherplayer {
-    move() {
-      ctx.clearRect(move[0].old, move[1].old, PIXELSIZE, PIXELSIZE);
-      ctx.fillRect(move[0].new, move[1].new, PIXELSIZE, PIXELSIZE);
+    move(data) {
+      ctx.clearRect(data.postionX.old, data.postionY.old, PIXELSIZE, PIXELSIZE);
+      ctx.fillRect(data.postionX.new, data.postionY.new, PIXELSIZE, PIXELSIZE);
     }
   }
   class Player {
@@ -37,12 +44,18 @@ $(document).ready(function () {
 
       ctx.clearRect(postionX.old, postionY.old, PIXELSIZE, PIXELSIZE);
       ctx.fillRect(postionX.new, postionY.new, PIXELSIZE, PIXELSIZE);
-      socket.emit("move", [postionX, postionY, this.name]);
+      socket.emit("move", {
+        postionX: postionX,
+        postionY: postionY,
+        name: this.name,
+        id: roomId,
+      });
     }
   }
 
   // setup
   let myplayer = new Player("salim");
+  let player2 = new Otherplayer();
   let canvas = $("#myCanvas");
   let ctx = canvas.get(0).getContext("2d");
   let canvasWidth = canvas.width();
@@ -84,8 +97,8 @@ $(document).ready(function () {
 
   $(function () {
     socket.on("move", function (move) {
-      ctx.clearRect(move[0].old, move[1].old, PIXELSIZE, PIXELSIZE);
-      ctx.fillRect(move[0].new, move[1].new, PIXELSIZE, PIXELSIZE);
+      console.log(move.postionX.new);
+      player2.move(move);
       crash(move);
     });
     socket.on("crash", function () {
@@ -94,8 +107,16 @@ $(document).ready(function () {
   });
 
   const crash = (other) => {
-    if (other[0].new == postionX.new && other[1].new == postionY.new) {
-      socket.emit("crash", [postionX, postionY, this.name]);
+    if (
+      other.postionX.new == postionX.new &&
+      other.postionY.new == postionY.new
+    ) {
+      socket.emit("crash", {
+        postionX: postionX,
+        postionY: postionY,
+        name: this.name,
+        id: roomId,
+      });
     }
   };
 });
