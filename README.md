@@ -4,8 +4,8 @@ the project is a simple game i create with nodejs and soket io.
 The game is not in a playable state since it does not have an **objective**.
 However, you can see the other player moving in **real time**.
 
-
-
+![](https://github.com/salimHarthi/online-game/blob/dev/docs/Capture.PNG)
+![](https://github.com/salimHarthi/online-game/blob/dev/docs/chrome-capture.gif)
 To play the [game](https://salim-game.herokuapp.com/):
 
 https://salim-game.herokuapp.com/
