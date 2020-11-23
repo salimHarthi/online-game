@@ -20,9 +20,10 @@ const server = app.listen(port, function (error) {
 const io = require("socket.io")(server);
 io.on("connection", (socket) => {
   console.log("connect");
-
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
   socket.on("checkRoom", (room) => {
-    console.log(room);
     if (!Room.roomExist(io.sockets.adapter.rooms.get(room))) {
       return socket.emit("checkRoom", "room does not exist");
     }
@@ -36,16 +37,14 @@ io.on("connection", (socket) => {
 
   socket.on("room", (room) => {
     socket.join(room);
-    console.log(io.sockets.adapter.rooms.get(room).size);
+    console.log(room, io.sockets.adapter.rooms.get(room).size);
   });
 
   socket.on("move", (data) => {
-    console.log(data);
     socket.to(data.id).broadcast.emit("move", data);
   });
   socket.on("crash", (data) => {
     io.to(data.id).emit("crash", data);
-    //io.emit("crash", data);
   });
 });
 

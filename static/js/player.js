@@ -21,7 +21,7 @@ class Player {
     ];
   }
   setDrawState(key) {
-    if (key.charCode == l) {
+    if (key.charCode == k) {
       this.draw = !this.draw;
       ctx.fillStyle = this.draw ? "DodgerBlue" : "red";
     }
@@ -94,4 +94,4 @@ const w = 119; //up
 const s = 115; // down
 const a = 97; // lef
 const d = 100; //right
-const l = 108; // drow / stop
+const k = 107; // drow / stop
