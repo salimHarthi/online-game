@@ -6,6 +6,7 @@ However, you can see the other player moving in **real time**.
 
 ![](https://github.com/salimHarthi/online-game/blob/dev/docs/Capture.PNG)
 ![](https://github.com/salimHarthi/online-game/blob/dev/docs/chrome-capture.gif)
+
 To play the [game](https://salim-game.herokuapp.com/):
 
 https://salim-game.herokuapp.com/
