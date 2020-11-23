@@ -1,10 +1,8 @@
 const express = require("express");
 const path = require("path");
 const app = express();
-const cors = require("cors");
 const Room = require("./game/room");
 const port = process.env.PORT || 3000;
-app.use(cors());
 
 //Room.validateToken(Room.createRoomToken("a"),"a")
 
