@@ -40,6 +40,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("move", (data) => {
+    console.log(data);
     socket.to(data.id).broadcast.emit("move", data);
   });
   socket.on("crash", (data) => {

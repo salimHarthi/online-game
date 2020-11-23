@@ -1,4 +1,3 @@
-const socket = io();
 let room;
 let name;
 $("form").on("submit", function (e) {
