@@ -1,6 +1,5 @@
 $(document).ready(function () {
   const url = window.location.pathname;
-  console.log(url);
   const roomId = url.substring(url.lastIndexOf("/") + 1);
   $("#roomId").text(roomId);
 
@@ -10,7 +9,6 @@ $(document).ready(function () {
 
   //   var image = new Image();
   //   image.src = canvas.get(0).toDataURL();
-  //   console.log(canvas.get(0).toDataURL());
   //   const coppy = $("#testcanves").get(0).getContext("2d");
   //   image.onload = function () {
   //     coppy.drawImage(image, 0, 0);

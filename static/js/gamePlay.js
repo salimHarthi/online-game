@@ -6,6 +6,7 @@ $(document).ready(function () {
   });
 
   $(document).on("keypress", function (e) {
+    myplayer.setDrawState(e);
     myplayer.move(e);
   });
 
