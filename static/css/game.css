@@ -1,4 +1,4 @@
-canvas {
+#player1, #copy {
   border: 1px solid #000000;
   margin: 10px;
   background-color: #fff;
@@ -11,3 +11,17 @@ canvas {
   background-size: 20px 20px, 100px 100px, 20px 20px, 100px 100px, 100px 100px,
     100px 100px;
 }
+#player2 {
+  border: 1px solid #000000;
+  margin: 10px;
+  background-color: #fff;
+  background-image: linear-gradient(black 1px, transparent 0),
+    linear-gradient(red 0px, transparent 0),
+    linear-gradient(90deg, black 1px, transparent 0),
+    linear-gradient(90deg, red 0px, transparent 0),
+    linear-gradient(transparent 3px, #fff 0, #fff 100px, transparent 0),
+    linear-gradient(90deg, red 0px, transparent 0, transparent 100px, red 0);
+  background-size: 10px 10px, 100px 100px, 10px 10px, 100px 100px, 100px 100px,
+    100px 100px;
+}
+html, body {margin: 0; height: 100%; overflow: hidden}

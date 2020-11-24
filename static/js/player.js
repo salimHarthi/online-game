@@ -1,9 +1,31 @@
 const url = window.location.pathname;
 const roomId = url.substring(url.lastIndexOf("/") + 1);
 class Otherplayer {
+  constructor(name) {
+    this.ratioScale = 2;
+  }
   move(data) {
-    ctx2.clearRect(data.postionX.old, data.postionY.old, PIXELSIZE, PIXELSIZE);
-    ctx2.fillRect(data.postionX.new, data.postionY.new, PIXELSIZE, PIXELSIZE);
+    if (data.draw) {
+      ctx2.fillRect(
+        data.postionX.new / this.ratioScale,
+        data.postionY.new / this.ratioScale,
+        PIXELSIZE / this.ratioScale,
+        PIXELSIZE / this.ratioScale
+      );
+    } else {
+      ctx2.clearRect(
+        data.postionX.old / this.ratioScale,
+        data.postionY.old / this.ratioScale,
+        PIXELSIZE / this.ratioScale,
+        PIXELSIZE / this.ratioScale
+      );
+      ctx2.fillRect(
+        data.postionX.new / this.ratioScale,
+        data.postionY.new / this.ratioScale,
+        PIXELSIZE / this.ratioScale,
+        PIXELSIZE / this.ratioScale
+      );
+    }
   }
 }
 class Player {
@@ -11,7 +33,9 @@ class Player {
     this.myStartPoint = this.startPoint();
     this.name = name;
     this.draw = true;
+    this.board = {};
   }
+
   startPoint() {
     let magicW = widthMax / PIXELSIZE;
     let magicH = hightMax / PIXELSIZE;
@@ -21,15 +45,18 @@ class Player {
     ];
   }
   setDrawState(key) {
-    if (key.charCode == k) {
+    if (key.which == k) {
       this.draw = !this.draw;
       ctx.fillStyle = this.draw ? "DodgerBlue" : "red";
     }
   }
+  trakPaint(x, y) {
+    this.board[`${x},${y}`] = ctx.fillStyle;
+  }
   move(key) {
     postionX.old = postionX.new;
     postionY.old = postionY.new;
-    switch (key.charCode) {
+    switch (key.which) {
       case a:
         postionX.new -= PIXELSIZE;
         break;
@@ -42,6 +69,18 @@ class Player {
       case d:
         postionX.new += PIXELSIZE;
         break;
+      case left:
+        postionX.new -= PIXELSIZE;
+        break;
+      case down:
+        postionY.new += PIXELSIZE;
+        break;
+      case up:
+        postionY.new -= PIXELSIZE;
+        break;
+      case right:
+        postionX.new += PIXELSIZE;
+        break;
       default:
     }
     postionX.new = postionX.new < 0 ? 0 : postionX.new;
@@ -51,6 +90,7 @@ class Player {
 
     if (this.draw) {
       ctx.fillRect(postionX.new, postionY.new, PIXELSIZE, PIXELSIZE);
+      this.trakPaint(postionX.new, postionY.new);
     } else {
       ctx.clearRect(postionX.old, postionY.old, PIXELSIZE, PIXELSIZE);
       ctx.fillRect(postionX.new, postionY.new, PIXELSIZE, PIXELSIZE);
@@ -60,6 +100,7 @@ class Player {
       postionY: postionY,
       name: this.name,
       id: roomId,
+      draw: this.draw,
     });
   }
 }
@@ -88,10 +129,14 @@ const postionY = {
 ctx.fillStyle = "DodgerBlue";
 ctx2.fillStyle = "red";
 ctx.fillRect(postionX.old, postionY.old, PIXELSIZE, PIXELSIZE);
-
+myplayer.trakPaint(postionX.old, postionY.old);
 // key setup
-const w = 119; //up
-const s = 115; // down
-const a = 97; // lef
-const d = 100; //right
-const k = 107; // drow / stop
+const w = 87; //up
+const s = 83; // down
+const a = 65; // lef
+const d = 68; //right
+const k = 75; // drow / stop
+const up = 38;
+const down = 40;
+const left = 37;
+const right = 39;
