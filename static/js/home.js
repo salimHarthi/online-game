@@ -1,12 +1,11 @@
-let room;
-let name;
 $("form").on("submit", function (e) {
   e.preventDefault();
 
-  room = $("#room").val();
-  name = $("#name").val();
-  // check if room is available
+  let room = $("#room").val();
+  let name = $("#name").val();
+  sessionStorage.setItem("name", name);
 
+  // check if room is available
   if (room) {
     socket.emit("checkRoom", room);
     socket.on("checkRoom", (room) => {

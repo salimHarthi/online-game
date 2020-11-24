@@ -6,6 +6,7 @@ $(document).ready(function () {
   });
 
   $(document).on("keydown", function (e) {
+    myplayer.submit(staticCavas1, e);
     myplayer.setDrawState(e);
     myplayer.move(e);
   });
@@ -14,8 +15,11 @@ $(document).ready(function () {
     socket.on("move", function (move) {
       player2.move(move);
     });
-    socket.on("crash", function () {
-      alert("crashed");
+  });
+  $(function () {
+    socket.on("won", function (data) {
+      console.log(data);
+      won(data);
     });
   });
 });

@@ -41,8 +41,8 @@ io.on("connection", (socket) => {
   socket.on("move", (data) => {
     socket.to(data.id).broadcast.emit("move", data);
   });
-  socket.on("crash", (data) => {
-    io.to(data.id).emit("crash", data);
+  socket.on("won", (data) => {
+    io.to(data.id).emit("won", data);
   });
 });
 

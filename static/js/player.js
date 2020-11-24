@@ -32,7 +32,7 @@ class Player {
   constructor(name) {
     this.myStartPoint = this.startPoint();
     this.name = name;
-    this.draw = true;
+    this.draw = false;
     this.board = {};
   }
 
@@ -45,13 +45,29 @@ class Player {
     ];
   }
   setDrawState(key) {
-    if (key.which == k) {
+    if (key.which == space) {
       this.draw = !this.draw;
       ctx.fillStyle = this.draw ? "DodgerBlue" : "red";
     }
   }
   trakPaint(x, y) {
     this.board[`${x},${y}`] = ctx.fillStyle;
+  }
+  removePaint(x, y) {
+    delete this.board[`${x},${y}`];
+  }
+  submit(image, key) {
+    if (!(key.which == enter)) return;
+    let objectKeys = Object.keys(image);
+    if (objectKeys.length === Object.keys(this.board).length) {
+      let answer = objectKeys.every(
+        (key) =>
+          this.board.hasOwnProperty(key) && this.board[key] === image[key]
+      );
+      if (answer) {
+        socket.emit("won", { id: roomId, answer: answer, name: this.name });
+      } else return alert("Not Don Yet");
+    } else return alert("Not Don Yet");
   }
   move(key) {
     postionX.old = postionX.new;
@@ -94,6 +110,7 @@ class Player {
     } else {
       ctx.clearRect(postionX.old, postionY.old, PIXELSIZE, PIXELSIZE);
       ctx.fillRect(postionX.new, postionY.new, PIXELSIZE, PIXELSIZE);
+      this.removePaint(postionX.new, postionY.new);
     }
     socket.emit("move", {
       postionX: postionX,
@@ -104,19 +121,7 @@ class Player {
     });
   }
 }
-
-// setup
-const canvas = $("#player1");
-const canvas2 = $("#player2");
-const ctx = canvas.get(0).getContext("2d");
-const ctx2 = canvas2.get(0).getContext("2d");
-const canvasWidth = canvas.width();
-const canvasHeight = canvas.height();
-const DIMENSION = 25;
-const PIXELSIZE = canvasWidth / DIMENSION;
-const widthMax = canvasWidth - PIXELSIZE;
-const hightMax = canvasHeight - PIXELSIZE;
-const myplayer = new Player("salim");
+const myplayer = new Player(localStorage.getItem("name"));
 const player2 = new Otherplayer();
 const postionX = {
   old: myplayer.myStartPoint[0],
@@ -126,17 +131,6 @@ const postionY = {
   old: myplayer.myStartPoint[1],
   new: myplayer.myStartPoint[1],
 };
-ctx.fillStyle = "DodgerBlue";
-ctx2.fillStyle = "red";
+ctx.fillStyle = "red";
+ctx2.fillStyle = "black";
 ctx.fillRect(postionX.old, postionY.old, PIXELSIZE, PIXELSIZE);
-myplayer.trakPaint(postionX.old, postionY.old);
-// key setup
-const w = 87; //up
-const s = 83; // down
-const a = 65; // lef
-const d = 68; //right
-const k = 75; // drow / stop
-const up = 38;
-const down = 40;
-const left = 37;
-const right = 39;
