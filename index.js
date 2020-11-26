@@ -1,10 +1,10 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const app = express();
-const Room = require("./game/room");
+const Room = require("./middleware/common");
+const routs = require("./rout");
 const port = process.env.PORT || 3000;
-
-//Room.validateToken(Room.createRoomToken("a"),"a")
 
 app.use(express.static(path.join(__dirname, "static")));
 
@@ -29,7 +29,7 @@ io.on("connection", (socket) => {
     if (!Room.roomLimit(roomSize, room)) {
       socket.emit("checkRoom", "room is full");
     } else {
-      socket.emit("RoomAvailable", "Room available");
+      socket.emit("RoomAvailable", room);
     }
   });
 
@@ -51,9 +51,4 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.get("/game/:id", (req, res) => {
-  res.sendFile(__dirname + "/static/game.html");
-});
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/static/index.html");
-});
+app.use(routs);

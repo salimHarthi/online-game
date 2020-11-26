@@ -6,7 +6,11 @@ $("form").on("submit", function (e) {
   sessionStorage.setItem("name", name);
 
   // check if room is available
-  if (room) {
+  if (!name) {
+    alert("Name is required");
+    return false;
+  }
+  if (room && name) {
     socket.emit("checkRoom", room);
     socket.on("checkRoom", (room) => {
       alert(room); //room is not available
@@ -17,11 +21,20 @@ $("form").on("submit", function (e) {
   }
   return false;
 });
+
 $("#create").click(function () {
-  let random = Math.floor(Math.random() * 1000);
-  window.location.href = `${window.location.href}game/${random}`;
+  let name = $("#name").val();
+  if (name) {
+    $.get(`${window.location.href}otp`, function (data, textStatus, jqXHR) {
+      sessionStorage.setItem("name", name);
+      let random = Math.floor(Math.random() * 1000);
+      window.location.href = `${window.location.href}game/${data}/${random}`;
+    });
+  } else alert("Name is required");
 });
 
-socket.on("RoomAvailable", (data) => {
-  window.location.href = `${window.location.href}game/${room}`;
+socket.on("RoomAvailable", (myroom) => {
+  $.get(`${window.location.href}otp`, function (data, textStatus, jqXHR) {
+    window.location.href = `${window.location.href}game/${data}/${myroom}`;
+  });
 });
